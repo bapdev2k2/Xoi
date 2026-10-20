@@ -435,26 +435,55 @@ document.querySelectorAll('.close-btn, .modal-backdrop').forEach(btn => {
 });
 
 // Âm thanh
+// --- ÂM THANH (TỰ ĐỘNG PHÁT VÀ XỬ LÝ CHÍNH SÁCH TRÌNH DUYỆT) ---
 let audioFile = new Audio('assets/music.mp3');
 audioFile.loop = true;
 audioFile.volume = 1;
 let isPlaying = false;
 const btnAudio = document.getElementById('btn-audio');
 
-btnAudio.addEventListener('click', () => {
+// Hàm xử lý phát nhạc
+function playMusic() {
+    if (!isPlaying) {
+        audioFile.play().then(() => {
+            isPlaying = true;
+            btnAudio.innerText = "⏸ Tạm dừng";
+        }).catch(e => {
+            // Trình duyệt chặn autoplay chặn do chưa có tương tác người dùng
+            console.log("Trình duyệt đang chờ tương tác để phát nhạc...");
+        });
+    }
+}
+
+// Xử lý nút bấm bật/tắt nhạc
+btnAudio.addEventListener('click', (e) => {
+    e.stopPropagation(); // Ngăn sự kiện click truyền ra ngoài
     if(isPlaying) {
         audioFile.pause();
         btnAudio.innerText = "🎵 Bật nhạc";
+        isPlaying = false;
     } else {
-        // Handle lỗi nếu không có file mp3
-        audioFile.play().catch(e => {
-            console.log("Audio file 'assets/music.mp3' not found or browser blocked autoplay.");
-            alert("Vui lòng thêm file music.mp3 vào thư mục assets/ để nghe nhạc nhé!");
-        });
-        btnAudio.innerText = "⏸ Tạm dừng";
+        playMusic();
     }
-    isPlaying = !isPlaying;
 });
+
+// Cố gắng tự động phát nhạc khi tải trang xong
+window.addEventListener('load', () => {
+    playMusic();
+});
+
+// Lách luật Autoplay: Bắt sự kiện chạm/click đầu tiên bất kỳ đâu trên trang
+document.body.addEventListener('click', () => {
+    if (!isPlaying) {
+        playMusic();
+    }
+}, { once: true }); // { once: true } giúp sự kiện này chỉ chạy đúng 1 lần duy nhất để đỡ tốn tài nguyên
+
+document.body.addEventListener('touchstart', () => {
+    if (!isPlaying) {
+        playMusic();
+    }
+}, { once: true, passive: true });
 
 // --- 6. CINEMATIC INTRO SEQUENCE ---
 async function startIntro() {
