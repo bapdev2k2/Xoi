@@ -1,0 +1,442 @@
+:root {
+    /* Palette màu cao cấp */
+    --pastel-pink: #FFD6E7;
+    --blush-pink: #FFB7D5;
+    --rose-pink: #F48FB1;
+    --deep-rose: #D85C91;
+    --lavender: #E8D5FF;
+    --warm-ivory: #FFF9F5;
+    --champagne-gold: #FFE6A7;
+    --leaf-green: #78B98A;
+    --leaf-dark: #4A8059;
+    --bg-dark: #1A0B14;
+    
+    /* Parallax Vars được cập nhật bằng JS */
+    --mouseX: 0px;
+    --mouseY: 0px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 100%, var(--blush-pink) 0%, #d4a5c9 40%, #1e1324 100%);
+    font-family: 'Nunito', sans-serif;
+    color: var(--warm-ivory);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+#bg-canvas { z-index: 1; }
+#fg-canvas { z-index: 4; }
+
+/* --- KHU VƯỜN (GARDEN & PARALLAX) --- */
+#parallax-container {
+    position: absolute;
+    bottom: 0;
+    left: -5%;
+    width: 110%;
+    height: 60vh;
+    z-index: 2;
+    pointer-events: auto;
+    /* Áp dụng parallax nhẹ nhàng */
+    transform: translate(calc(var(--mouseX) * -0.02), calc(var(--mouseY) * -0.01));
+    transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.garden-layer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+}
+
+/* Các lớp hoa có độ sâu khác nhau */
+.back { 
+    filter: blur(3px) brightness(0.8); 
+    transform: scale(0.7) translateY(20px); 
+    opacity: 0; /* Cho Intro */
+}
+.mid { 
+    filter: blur(1px) brightness(0.9); 
+    transform: scale(0.85) translateY(10px); 
+    opacity: 0; 
+}
+.front { 
+    transform: scale(1) translateY(0); 
+    opacity: 0; 
+    z-index: 3;
+}
+
+/* Đồi cỏ bên dưới */
+#grass-overlay {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    width: 100%;
+    height: 15vh;
+    background: linear-gradient(to top, rgba(74, 128, 89, 0.8), rgba(120, 185, 138, 0.2), transparent);
+    filter: blur(10px);
+    z-index: 4;
+}
+
+/* --- HOA (PLANT & FLOWER COMPONENTS) --- */
+.plant {
+    position: absolute;
+    bottom: -10px;
+    transform-origin: bottom center;
+    /* Sẽ được gán animation đung đưa trong JS */
+    cursor: pointer;
+    transition: filter 0.3s ease;
+}
+
+.plant:hover {
+    filter: drop-shadow(0 0 15px var(--champagne-gold)) brightness(1.2);
+}
+
+.plant .stem-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-origin: bottom center;
+}
+
+.plant svg {
+    overflow: visible;
+}
+
+/* Hover hoa ngả nhẹ về phía chuột */
+.plant:hover .flower-head {
+    transform: rotate(10deg) scale(1.05);
+}
+
+.flower-head {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: center center;
+}
+
+/* Animations Hoa Mọc & Đung đưa */
+@keyframes growUp {
+    from { transform: scaleY(0); opacity: 0; }
+    to { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes swayBack {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(4deg); }
+}
+@keyframes swayMid {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+}
+@keyframes swayFront {
+    0%, 100% { transform: rotate(-7deg) skewX(-2deg); }
+    50% { transform: rotate(7deg) skewX(2deg); }
+}
+
+/* --- UI & TYPOGRAPHY --- */
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 6;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 8vh;
+    transform: translate(calc(var(--mouseX) * -0.01), calc(var(--mouseY) * -0.01));
+}
+
+.greeting-box {
+    text-align: center;
+    max-width: 800px;
+    padding: 0 20px;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.main-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    background: linear-gradient(45deg, var(--warm-ivory), var(--champagne-gold), var(--rose-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(255, 230, 167, 0.5));
+    margin-bottom: 10px;
+}
+
+.sub-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 3.5rem;
+    color: var(--champagne-gold);
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+/* Hiệu ứng shimmer quét qua chữ 20/10 */
+.sub-title::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    animation: shimmer 3s infinite linear;
+    transform: skewX(-20deg);
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
+
+.message {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--warm-ivory);
+    font-weight: 300;
+}
+
+.controls {
+    margin-top: 30px;
+    pointer-events: auto;
+    display: flex;
+    gap: 15px;
+}
+
+.magic-btn {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--blush-pink);
+    color: var(--warm-ivory);
+    padding: 10px 25px;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(244, 143, 177, 0.2);
+    font-family: 'Nunito', sans-serif;
+}
+
+.magic-btn:hover {
+    background: var(--rose-pink);
+    color: #fff;
+    box-shadow: 0 0 20px var(--rose-pink);
+    transform: translateY(-2px);
+}
+
+/* --- POLAROID PHOTOS --- */
+#photo-container {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 5;
+    pointer-events: none; /* Container không cản chuột */
+}
+
+.polaroid {
+    position: absolute;
+    width: 140px;
+    padding: 10px 10px 25px 10px;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    pointer-events: auto; /* Ảnh bắt chuột */
+    cursor: pointer;
+    will-change: transform;
+    transition: box-shadow 0.3s ease, filter 0.3s ease;
+}
+
+.polaroid img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+    border-radius: 1px;
+}
+
+.polaroid:hover {
+    box-shadow: 0 15px 35px rgba(244, 143, 177, 0.5);
+    filter: brightness(1.05);
+    z-index: 10;
+}
+
+/* --- MODALS --- */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.4s ease, visibility 0.4s;
+}
+
+.modal.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(26, 11, 20, 0.8);
+    backdrop-filter: blur(8px);
+}
+
+.modal-content {
+    position: relative;
+    background: #fff;
+    padding: 15px 15px 40px 15px;
+    border-radius: 4px;
+    transform: scale(0.8);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.modal:not(.hidden) .modal-content {
+    transform: scale(1);
+}
+
+.modal-content img {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+}
+
+/* --- 1. MẶC ĐỊNH CHO MÀN HÌNH LỚN (MACBOOK PRO, PC 1920x1080) --- */
+/* --- 1. MẶC ĐỊNH CHO MÀN HÌNH LỚN (MACBOOK PRO, PC 1920x1080) --- */
+.text-modal {
+    background: linear-gradient(135deg, var(--warm-ivory), var(--pastel-pink));
+    padding: 50px 60px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(216, 92, 145, 0.3);
+    
+    max-width: 750px;
+    width: 90vw;
+    /* Xóa overflow-y: auto ở đây để không bị cắt mất nút Close */
+    position: relative; /* Đảm bảo làm gốc tọa độ cho nút Close */
+}
+
+.dancing-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.7rem;
+    color: var(--deep-rose);
+    line-height: 1.8;
+    margin: 0;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
+    
+    /* CHUYỂN THANH CUỘN VÀO ĐÂY */
+    max-height: 70vh; /* Giới hạn chiều cao của vùng chữ thay vì vùng khung */
+    overflow-y: auto; /* Cuộn dọc nếu chữ quá dài */
+    overflow-x: hidden; /* XÓA THANH CUỘN NGANG HOÀN TOÀN */
+    padding-right: 15px; /* Thêm khoảng trống để chữ không dính sát vào thanh cuộn */
+}
+
+/* Tùy chỉnh thanh cuộn giờ sẽ áp dụng cho .dancing-text thay vì .text-modal */
+.dancing-text::-webkit-scrollbar {
+    width: 6px; /* Làm thanh cuộn nhỏ lại một chút cho tinh tế */
+}
+.dancing-text::-webkit-scrollbar-track {
+    background: rgba(255, 214, 231, 0.3);
+    border-radius: 10px;
+}
+.dancing-text::-webkit-scrollbar-thumb {
+    background: var(--rose-pink);
+    border-radius: 10px;
+}
+.dancing-text::-webkit-scrollbar-thumb:hover {
+    background: var(--deep-rose);
+}
+
+.close-btn {
+    position: absolute;
+    top: -15px; 
+    right: -15px;
+    width: 35px; 
+    height: 35px;
+    background: var(--rose-pink);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Làm đậm bóng đổ để nút nổi bật hơn */
+    z-index: 99999; /* Đảm bảo nằm trên mọi thứ */
+    display: flex; /* Căn giữa dấu X */
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.close-btn:hover {
+    background: var(--deep-rose);
+    transform: scale(1.1); /* Hiệu ứng phình to nhẹ khi di chuột */
+}
+
+/* --- INTRO ANIMATION CLASSES --- */
+.intro-hidden {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(10px);
+}
+
+.intro-animate {
+    transition: opacity 1.5s ease, transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1), filter 1.5s ease;
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+}
+
+/* --- ĐIỀU CHỈNH RIÊNG CHO ĐIỆN THOẠI (MOBILE) --- */
+/* --- 2. RESPONSIVE CHO LAPTOP NHỎ & TABLET (VD: 1366x768, 1440x900) --- */
+@media (max-width: 1440px) {
+    .text-modal {
+        padding: 40px 50px;
+        max-height: 85vh; /* Tăng chiều cao tối đa thêm một chút vì màn laptop hơi lùn */
+    }
+    
+    .dancing-text {
+        font-size: 1.5rem; /* Thu nhỏ chữ 1 xíu để bao quát được nhiều nội dung hơn, đỡ phải cuộn chuột nhiều */
+        line-height: 1.7;
+    }
+}
+
+
+/* --- 3. RESPONSIVE CHO ĐIỆN THOẠI (MOBILE) --- */
+@media (max-width: 768px) {
+    .text-modal {
+        padding: 35px 20px; /* Giảm padding hai bên để tối đa hóa diện tích hiển thị chữ */
+        max-width: 92vw;
+    }
+    
+    .dancing-text {
+        font-size: 1.3rem; /* Cỡ chữ gọn gàng cho màn hình cầm tay */
+        line-height: 1.6;
+        text-align: left; /* Lời khuyên: Text dài trên mobile nên căn trái (hoặc justify) đọc sẽ tự nhiên và đỡ mỏi mắt hơn căn giữa */
+    }
+}

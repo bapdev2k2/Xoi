@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>A Garden of Love - Happy Women's Day 20/10</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font chữ thanh lịch cho tiêu đề -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Dancing+Script:wght@700&family=Nunito:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Layer 1: Background Orbs & Stars (Canvas) -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Layer 2: Khu vườn (Parallax DOM) -->
+    <div id="parallax-container">
+        <div id="garden-layer-back" class="garden-layer back"></div>
+        <div id="garden-layer-mid" class="garden-layer mid"></div>
+        <div id="garden-layer-front" class="garden-layer front"></div>
+        <div id="grass-overlay"></div>
+    </div>
+
+    <!-- Layer 3: Cánh hoa rơi & Bụi tiên (Canvas) -->
+    <canvas id="fg-canvas"></canvas>
+
+    <!-- Layer 4: Polaroid Photos Container -->
+    <div id="photo-container"></div>
+
+    <!-- Layer 5: UI & Text -->
+    <div id="ui-layer">
+        <div class="greeting-box">
+            <h1 class="main-title intro-hidden">Happy Women's Day</h1>
+            <h2 class="sub-title intro-hidden">20 / 10</h2>
+            <p class="message intro-hidden">Gửi đến những người phụ nữ tuyệt vời nhất, chúc vợ luôn rạng rỡ như những đóa hoa, hạnh phúc và được yêu thương mỗi ngày. Yêu Xôi💗</p>
+        </div>
+
+        <div class="controls intro-hidden">
+            <button id="btn-audio" class="magic-btn">🎵 Bật nhạc</button>
+            <button id="btn-heart" class="magic-btn heart-btn">💗 Gửi yêu thương</button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-photo" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <img src="" alt="Kỷ niệm" id="zoomed-photo">
+            <p id="photo-caption" class="handwriting"></p>
+        </div>
+    </div>
+
+    <div id="modal-message" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content text-modal">
+            <button class="close-btn">&times;</button>
+            <h3 class="dancing-text">Chúc mừng ngày 20/10 cô gái anh yêu ❤️🌷<br>
+
+Nhân ngày đặc biệt này, anh chúc em bé của anh luôn xinh đẹp, vui vẻ, hạnh phúc và lúc nào cũng nở nụ cười thật tươi. Anh mong rằng không chỉ hôm nay mà tất cả những ngày sau này, em đều được yêu thương, chiều chuộng và không phải buồn vì bất cứ điều gì.<br>
+
+Cảm ơn em vì đã xuất hiện trong cuộc đời anh, đã ở bên anh và cùng anh tạo nên những kỷ niệm thật đẹp. Anh biết đôi lúc anh còn vô tâm, chưa đủ tinh tế, nhưng anh sẽ luôn cố gắng để yêu thương và chăm sóc em tốt hơn mỗi ngày.<br>
+
+Anh không hứa sẽ mang đến cho em cả thế giới, nhưng anh sẽ cố gắng để thế giới nhỏ của em luôn ngập tràn hạnh phúc. Mong rằng chúng mình sẽ cùng nhau trải qua thật nhiều ngày 20/10 nữa nhé.<br>
+
+Yêu em nhiều lắm, công chúa nhỏ của anh! ❤️🌸</h3>
+        </div>
+    </div>
+
+    <!-- Tương tác tạo hạt -->
+    <div id="click-particles"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
